@@ -11,3 +11,21 @@ cloud:
     credentials:
       accessKey: ${SPRING_AWS_ACCESS_KEY}
       secretKey: ${SPRING_AWS_SECRET_KEY}
+
+# MySQL 데이터베이스 연결 설정
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?useSSL=false&serverTimezone=UTC
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
