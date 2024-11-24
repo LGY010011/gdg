@@ -20,4 +20,4 @@ fi
 
 # jar파일을 실행시키는 명령어
 echo "> $JAR_PATH 배포"
-nohup java -jar $JAR_PATH > /dev/null 2> /dev/null < /dev/null &
+nohup java -jar $JAR_PATH > /home/ubuntu/action/nohup.out 2>&1 &
