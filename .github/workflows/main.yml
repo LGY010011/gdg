@@ -11,6 +11,12 @@ env:
   AWS_REGION: ap-northeast-2
   CODE_DEPLOY_NAME: codeDeployTest
   CODE_DEPLOY_GROUP: codeDeploy-cicd
+  SPRING_AWS_BUCKET: ${{ secrets.SPRING_BUCKET_NAME }}
+  SPRING_AWS_ACCESS_KEY: ${{ secrets.SPRING_AWS_ACCESS_KEY_ID }}
+  SPRING_AWS_SECRET_KEY: ${{ secrets.SPRING_AWS_SECRET_ACCESS_KEY }}
+  DB_USERNAME: ${{ secrets.DB_USERNAME }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
 
 
 jobs:
@@ -27,14 +33,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup environment variables
-        run: |
-          echo "SPRING_AWS_BUCKET=${{ secrets.SPRING_BUCKET_NAME }}" >> $GITHUB_ENV
-          echo "AWS_REGION=ap-northeast-2" >> $GITHUB_ENV
-          echo "SPRING_AWS_ACCESS_KEY=${{ secrets.SPRING_AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
-          echo "SPRING_AWS_SECRET_KEY=${{ secrets.SPRING_AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
-          echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Debug environment variables
         run: |
