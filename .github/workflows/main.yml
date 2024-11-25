@@ -36,6 +36,10 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> $GITHUB_ENV
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
 
+      - name: Debug environment variables
+        run: |
+          echo "DB_USERNAME=$DB_USERNAME"
+
       - name: Grant excute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
@@ -62,7 +66,7 @@ jobs:
         run: ls -l ./scripts/
 
       - name: Set permissions for deploy script
-        run: chmod +x ./scripts/deploy.sh
+        run: sudo chmod +x ./scripts/deploy.sh
 
       - name: Code Deploy
         run: aws deploy create-deployment --application-name $CODE_DEPLOY_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $CODE_DEPLOY_GROUP --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
