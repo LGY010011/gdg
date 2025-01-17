@@ -3,22 +3,8 @@ name: github-action-learn
 on:
   push:
     branches: [ main ]
-  pull_request: 
+  pull_request:
     branches: [ main ]
-
-env:
-  S3_BUCKET_NAME: ${{ secrets.AWS_S3_BUCKET }}
-  AWS_REGION: ap-northeast-2
-  CODE_DEPLOY_NAME: codeDeployTest
-  CODE_DEPLOY_GROUP: codeDeploy-cicd
-  SPRING_AWS_BUCKET: ${{ secrets.SPRING_BUCKET_NAME }}
-  SPRING_AWS_ACCESS_KEY: ${{ secrets.SPRING_AWS_ACCESS_KEY_ID }}
-  SPRING_AWS_SECRET_KEY: ${{ secrets.SPRING_AWS_SECRET_ACCESS_KEY }}
-  DB_USERNAME: ${{ secrets.DB_USERNAME }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,11 +19,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-
-      - name: Debug environment variables
-        run: |
-          echo "DB_USERNAME=$DB_USERNAME"
-
       - name: Grant excute permission for gradlew
         run: chmod +x ./gradlew
         shell: bash
@@ -45,26 +26,3 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew build -x test
         shell: bash
-
-      - name: Make Zip File
-        run: zip -qq -r ./$GITHUB_SHA.zip .
-        shell: bash
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Upload to S3
-        run: aws s3 cp --region ${{ env.AWS_REGION }} ./$GITHUB_SHA.zip s3://$S3_BUCKET_NAME/$GITHUB_SHA.zip
-
-      - name: List files in the scripts directory
-        run: ls -l ./scripts/
-
-      - name: Set permissions for deploy script
-        run: sudo chmod +x ./scripts/deploy.sh
-
-      - name: Code Deploy
-        run: aws deploy create-deployment --application-name $CODE_DEPLOY_NAME --deployment-config-name CodeDeployDefault.OneAtATime --deployment-group-name $CODE_DEPLOY_GROUP --s3-location bucket=$S3_BUCKET_NAME,bundleType=zip,key=$GITHUB_SHA.zip
